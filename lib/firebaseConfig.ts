@@ -1,15 +1,21 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// lib/firebaseConfig.js
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyADLLPLdZ3lFBWGZrfvsYTN4YjGb5QRzjs",
-  authDomain: "myapp-63c09.firebaseapp.com",
-  projectId: "myapp-63c09",
-  storageBucket: "myapp-63c09.appspot.com",
-  messagingSenderId: "1097198899637",
-  appId: "1:1097198899637:web:a3611558118cbdc1cdc9fc",
-  measurementId: "G-23WYWE52W3"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialize Firebase only if it hasn't been initialized already
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+const db = getFirestore(app); // Firestore database
+const auth = getAuth(app); // Firebase authentication
+
+export { app, db, auth };
