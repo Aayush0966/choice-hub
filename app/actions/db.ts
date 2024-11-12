@@ -3,6 +3,7 @@ import { adminDb } from "@/lib/FirebaseAdmin";
 
 export const createPoll = async (question: FormDataEntryValue, options: Record<string, string>, userId: string) => {
     try {
+      console.log("question: ", question, "options: ", options, "userId: ", userId)
       const pollRef = await adminDb.collection('polls').add({
         question,
         options,

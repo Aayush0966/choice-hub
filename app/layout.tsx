@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins, Kurale } from 'next/font/google'
+import {Toaster} from "react-hot-toast"
 
 export const metadata: Metadata = {
   title: "Pollify",
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${kurale.variable} ${poppins.variable} antialiased`}
       >
+        <Toaster position="bottom-center" />
         {children}
       </body>
     </html>
