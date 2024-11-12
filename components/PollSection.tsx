@@ -1,16 +1,16 @@
 'use client'
 
-import { getUserId } from '@/lib/utils';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import PollForm from './PollForm';
 import PollResult from './PollResult';
+import { usePollContext } from '@/context/pollContext';
 
 function PollSection() {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [pollCreation, setPollCreation] = useState<boolean>(true);
-
+    const { setActivePoll, pollState } = usePollContext();
 
     const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[]) => {
         event.preventDefault();
@@ -19,7 +19,7 @@ function PollSection() {
         console.log("got here")
     
         const formData = new FormData(event.currentTarget);
-        const userId = getUserId();
+        const userId = localStorage.getItem('userId');
         const question = formData.get("question") as string | null;
     
         try {
@@ -33,14 +33,9 @@ function PollSection() {
     
           const data = await response.json();
           if (response.ok && data.message === 'Success') {
-            const user = localStorage.getItem('user');
-            if (user) {
-              const parsedUser = JSON.parse(user);
-              parsedUser.polls = parsedUser.polls || {};
-              parsedUser.polls[`poll${Object.keys(parsedUser.polls).length + 1}`] = data.pollId;
-              localStorage.setItem('user', JSON.stringify(parsedUser));
-            }
             toast.success("Poll created successfully");
+            setActivePoll(data?.pollId)
+
             setPollCreation(false);
           } else {
             setError(data.error || "Failed to create poll.");
@@ -62,11 +57,11 @@ function PollSection() {
       {error && <div className="error-message">{error}</div>}
       {
         
-        pollCreation &&
+        pollState.activePollId === null &&
         <PollForm createPoll={createPoll} error={error} loading={loading} />
       }
       {
-        !pollCreation &&
+        pollState.activePollId !== null &&
         <PollResult />
       }
       </div>

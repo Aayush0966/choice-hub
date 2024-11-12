@@ -6,9 +6,9 @@ import { BackgroundLines } from './ui/background-lines';
 import logo from "@/public/logo.png"
 import GithubButton from "@/components/ui/GithubButton"
 import FeatureCard from './FeatureCard';
+import ThemeToggle from './ui/ThemeToggle';
 
 const HeroSection = () => {
-
   const features = [
     {
       icon: Vote,
@@ -32,7 +32,6 @@ const HeroSection = () => {
     }
   ]
 
-
   return (
     <BackgroundLines className="relative min-h-screen bg-zinc-50 dark:bg-black">
       {/* Subtle Background Gradient */}
@@ -45,7 +44,7 @@ const HeroSection = () => {
       {/* Content Container */}
       <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation */}
-        <nav className="pt-8">
+        <nav className="pt-8 flex items-center justify-between">
           <Link href='/' className="flex items-center">
             <Image
               src={logo}
@@ -58,6 +57,8 @@ const HeroSection = () => {
               Pollify
             </h2>
           </Link>
+          
+          <ThemeToggle />
         </nav>
 
         {/* Hero Content */}

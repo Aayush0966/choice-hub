@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins, Kurale } from 'next/font/google'
 import {Toaster} from "react-hot-toast"
+import { PollProvider } from "@/context/pollContext";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Pollify",
@@ -36,7 +38,11 @@ export default function RootLayout({
         className={`${kurale.variable} ${poppins.variable} antialiased`}
       >
         <Toaster position="bottom-center" />
+        <PollProvider>
+          <ThemeProvider attribute="class">
         {children}
+        </ThemeProvider>
+        </PollProvider>
       </body>
     </html>
   );
