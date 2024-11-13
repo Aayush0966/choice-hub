@@ -1,5 +1,4 @@
 'use client'
-
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface User {
@@ -31,7 +30,14 @@ interface PollProviderProps {
 }
 
 export const PollProvider: React.FC<PollProviderProps> = ({ children }) => {
-  // Function to generate or retrieve the unique userId
+  const [pollState, setPollState] = useState<PollState>({
+    activePollId: null,
+    user: { userId: null }, // Initial state for userId is null
+  });
+  
+  const [isClient, setIsClient] = useState(false); // Flag to track if client-side
+
+  // Function to get userId from localStorage
   const getUserId = (): string => {
     let userId = localStorage.getItem('userId');
     if (!userId) {
@@ -41,14 +47,7 @@ export const PollProvider: React.FC<PollProviderProps> = ({ children }) => {
     return userId;
   };
 
-  const [pollState, setPollState] = useState<PollState>({
-    activePollId: null,
-    user: {
-      userId: getUserId(),
-    },
-  });
-
-  // Load poll state from localStorage on first load
+  // Load poll state from localStorage on client side
   const loadPollStateFromStorage = () => {
     const storedPollState = localStorage.getItem('user');
     if (storedPollState) {
@@ -57,12 +56,24 @@ export const PollProvider: React.FC<PollProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    loadPollStateFromStorage();
-  }, []);
+    // Set the client-side flag and load userId and poll state after mount
+    setIsClient(true);  // This ensures that we only set state after the component mounts
+
+    const userId = getUserId(); // Fetch or generate the userId
+    setPollState((prevState) => ({
+      ...prevState,
+      user: { userId },
+    }));
+
+    loadPollStateFromStorage(); // Optionally load poll state from storage
+
+  }, []); // Empty dependency array means this runs only once, after the first render
 
   // Save poll state to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(pollState));
+    if (pollState.user.userId !== null) { // Ensure userId is set
+      localStorage.setItem('user', JSON.stringify(pollState));
+    }
   }, [pollState]);
 
   // Function to set the active poll ID
@@ -72,6 +83,11 @@ export const PollProvider: React.FC<PollProviderProps> = ({ children }) => {
       activePollId: pollId,
     }));
   };
+
+  // Render a loading state until the component is mounted and the state is set
+  if (!isClient) {
+    return null; // Prevents any rendering until the client-side state is initialized
+  }
 
   return (
     <PollContext.Provider value={{ pollState, setActivePoll }}>

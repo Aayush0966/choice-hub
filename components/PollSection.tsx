@@ -11,6 +11,8 @@ function PollSection() {
     const [loading, setLoading] = useState<boolean>(false);
     const [pollCreation, setPollCreation] = useState<boolean>(true);
     const { setActivePoll, pollState } = usePollContext();
+    const userId = pollState?.user?.userId;
+    const pollId = pollState?.activePollId;
 
     const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[]) => {
         event.preventDefault();
@@ -46,7 +48,7 @@ function PollSection() {
         } finally {
           setLoading(false);
         }
-      };
+    };
     
 
 
@@ -61,8 +63,8 @@ function PollSection() {
         <PollForm createPoll={createPoll} error={error} loading={loading} />
       }
       {
-        pollState.activePollId !== null &&
-        <PollResult />
+        userId && pollId &&
+        <PollResult userId={userId} pollId={pollId} />
       }
       </div>
   )
