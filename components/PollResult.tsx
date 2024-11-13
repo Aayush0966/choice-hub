@@ -1,6 +1,7 @@
 import { Link, Copy, Share2, ArrowRight, Vote, Users } from 'lucide-react';
 import { BackgroundLines } from './ui/background-lines';
 import ResultBox from './ResultBox';
+import ShareCard from './ShareCard';
 
 const PollResult =  ({userId, pollId} : {userId:string, pollId:string}) => {
   
@@ -33,31 +34,7 @@ const PollResult =  ({userId, pollId} : {userId:string, pollId:string}) => {
 
         {/* Main Content */}
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {/* Share Card */}
-          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg ring-1 ring-zinc-200 dark:ring-zinc-800">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <Link className="w-5 h-5 text-violet-600 dark:text-violet-400" />
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Share Your Poll</h2>
-              </div>
-              <div className="flex items-center gap-2">
-                <button className="p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-900/50 text-violet-600 dark:text-violet-400 transition-colors">
-                  <Share2 className="w-5 h-5" />
-                </button>
-                
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <div className="flex-1 bg-zinc-50 dark:bg-zinc-800/50 px-4 py-2 rounded-lg text-zinc-600 dark:text-zinc-300 font-mono text-sm border border-zinc-200 dark:border-zinc-700">
-                https://pollify.com/polls/{pollId}
-              </div>
-              <button className="group px-4 py-2 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all duration-200 flex items-center gap-2">
-                <Copy className="w-4 h-4" />
-                Copy
-              </button>
-            </div>
-          </div>
+          <ShareCard pollId={pollId} />
 
 
           <ResultBox pollId={pollId} userId={userId} />

@@ -6,8 +6,9 @@ import { onSnapshot } from 'firebase/firestore';
 import { ArrowRight } from 'lucide-react'
 import { Users } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { usePollContext } from '@/context/pollContext';
 
-interface Option  {
+export interface Option  {
     text: string;         // The text of the option (e.g., "Brazil")
     votes: number;        // The number of votes for this option
     percentage: number;   // The calculated percentage of total votes
@@ -18,6 +19,7 @@ function ResultBox({pollId, userId}: {pollId:string, userId:string}) {
 
     const [pollData, setPollData] = useState<any>(null);
     const [loading,setLoading] = useState(true);
+    const {setActivePoll} = usePollContext()
     const colors: { [key: number]: string } = {
         0: "from-violet-500 to-violet-600",
         1: "from-fuchsia-500 to-fuchsia-600",
@@ -35,6 +37,25 @@ function ResultBox({pollId, userId}: {pollId:string, userId:string}) {
           color
         };
       });
+
+      const handleNewPoll = async() => {
+        const payload = {
+        pollId,
+        userId
+        }
+        try {
+          const response = await fetch('/api/poll', {
+            method: 'DELETE',
+            headers: { 'content-type': 'application/json'},
+            body: JSON.stringify(payload)
+          })
+          if (response.ok) {
+            setActivePoll(null);
+          }
+        } catch (error) {
+          console.log("something wrong happened: ", error)
+        }
+      }
 
 
     useEffect(() => {
@@ -107,7 +128,7 @@ function ResultBox({pollId, userId}: {pollId:string, userId:string}) {
               </div>
 
               <div className="mt-10 grid grid-cols-2 gap-4">
-                <button  className="group px-6 py-3 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all duration-200 flex items-center justify-center">
+                <button onClick={handleNewPoll}  className="group px-6 py-3 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-all duration-200 flex items-center justify-center">
                   New Poll
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>

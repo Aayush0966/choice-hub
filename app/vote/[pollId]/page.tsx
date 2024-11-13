@@ -1,10 +1,10 @@
-import React from 'react'
+import { getPollDetails } from '@/app/actions/db';
+import VotePage from '@/components/VotePage';
 
-async function page({params} : {params: Promise<{pollId : string}>}) {
-    const pollId = (await params).pollId
-  return (
-    <div>page: {pollId}</div>
-  )
+async function Page({ params }: { params: { pollId: string } }) {
+  const pollId = await params.pollId;
+    const pollInfo = await getPollDetails(pollId);
+    return <VotePage pollInfo={pollInfo} pollId={pollId}  />;
 }
 
-export default page
+export default Page;

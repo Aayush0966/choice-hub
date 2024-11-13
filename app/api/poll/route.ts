@@ -1,4 +1,4 @@
-import { createPoll } from '@/app/actions/db';
+import { createPoll, removePoll } from '@/app/actions/db';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -12,6 +12,20 @@ export async function POST(req: Request) {
     const pollId = await createPoll(question, options, userId);
 
     return NextResponse.json({ message: 'Success', pollId }, {status: 200});
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Something went wrong' }, {status: 500});
+  }
+}
+export async function DELETE(req: Request) {
+  try {
+    const {userId, pollId} = await req.json();
+    if (!userId || !pollId) {
+      return NextResponse.json({ error: 'All fields are required' }, {status: 400});
+  }
+    await removePoll(pollId);
+    return NextResponse.json({ message: 'Success' }, {status: 200});
+
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Something went wrong' }, {status: 500});

@@ -1,5 +1,6 @@
 'use server'
 import { adminDb } from "@/lib/FirebaseAdmin";
+import { FieldValue } from 'firebase-admin/firestore'
 
 
 export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string) => {
@@ -21,17 +22,44 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
     }
   };
 
-export const getPollDetails = async(pollId: string, userId: string) => {
-  if (!userId) {
-    throw new Error("Some error has occurred. Please contact the developer")
-  }
-  const pollDoc = await adminDb.collection('polls').doc(pollId).get();
+export const getPollDetails = async(pollId: string) => {
 
+  const pollDoc = await adminDb.collection('polls').doc(pollId).get();
   if (pollDoc.exists) {
     const pollData = pollDoc.data();
-    console.log("Poll data:", pollData);
+    delete pollData?.userId;
+    delete pollData?.createdAt;
     return pollData;
   } else {
     console.log("No poll found with the specified ID.");
     return null;
   }}
+
+export const removePoll = async( pollId:string) => {
+  await adminDb.collection('polls').doc(pollId).update({activePoll: false});
+  return ;
+}
+
+export const votePoll = async(userId:string, pollId:string, optionId:string) => {
+  const voteRef = await adminDb.collection('polls').doc(pollId).update({
+    totalVotes: FieldValue.increment(1),
+    votes: FieldValue.arrayUnion({
+      voterId: userId,
+      votedTo: optionId,
+    }),
+  });
+  return voteRef;
+}
+
+export const checkUser = async (userId: string, pollId: string) => {
+  const pollDoc = await adminDb.collection('polls').doc(pollId).get();
+
+  if (pollDoc.exists) {
+    const userData = pollDoc.data();
+
+    const isVoted = userData?.votes?.some((vote: { voterId: string }) => vote?.voterId === userId);
+    return isVoted; 
+  }
+
+  return false;
+}
