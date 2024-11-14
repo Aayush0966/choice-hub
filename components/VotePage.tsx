@@ -2,16 +2,8 @@ import { Vote } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import VoteForm from './VoteForm';
-import { checkUser } from '@/app/actions/db';
 
 async function VotePage({pollInfo, pollId}: {pollInfo: any, pollId:string}) {
-
-    const handleVote = async (formData: FormData) => {
-        'use server';
-        const selectedOption = formData.get('voteOption');
-        console.log('Selected Option:', selectedOption);
-    
-      };
 
   return (
     <div className="relative w-full min-h-screen bg-zinc-50 dark:bg-black flex flex-col items-center">
@@ -34,7 +26,7 @@ async function VotePage({pollInfo, pollId}: {pollInfo: any, pollId:string}) {
       </div>
     </nav>
 
-    <VoteForm pollId={pollId} handleVote={handleVote}  pollInfo={pollInfo} />
+    <VoteForm pollId={pollId} pollInfo={pollInfo} />
     </div>
   )
 }

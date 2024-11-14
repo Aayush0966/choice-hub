@@ -7,7 +7,7 @@ import { RWebShare } from "react-web-share";
 
 function ShareCard({pollId} : {pollId:string}) {
     const [copied, setCopied] = useState<boolean>(false)
-    const pollUrl = `https://pollify.com/vote/${pollId}`
+    const pollUrl = `http://localhost:3000/vote/${pollId}`
 
     const handleCopy = async () => {
         await navigator.clipboard.writeText(pollUrl); 

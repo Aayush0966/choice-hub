@@ -8,27 +8,28 @@ import { toast } from 'react-hot-toast';
 import { usePollContext } from '@/context/pollContext';
 
 interface VoteFormProps {
-  handleVote: (formData: FormData) => void;
   pollInfo: any;
   pollId: string;
 }
 
-const VoteForm = ({ handleVote, pollInfo, pollId }: VoteFormProps) => {
+const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null); // State to track selected option
   const [voted, setVoted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false); // Loading state to track the user check
   const { pollState } = usePollContext();
 
-  const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(event.target.value); // Update selected option
+  const handleOptionChange = (id:string) => {
+    console.log(id)
+    setSelectedOption(id); 
   };
+  
 
   const checkUser = async () => {
     const userId = pollState?.user?.userId;
     if (!userId) return;
 
     setLoading(true); // Start loading
-
+    
     try {
       const response = await fetch(`/api/user?userId=${encodeURIComponent(userId)}&pollId=${encodeURIComponent(pollId)}`, {
         method: 'GET',
@@ -39,7 +40,7 @@ const VoteForm = ({ handleVote, pollInfo, pollId }: VoteFormProps) => {
 
       if (response.ok) {
         const data = await response.json();
-        setVoted(data?.isVoted); // Set the voted state based on the response
+        setVoted(data?.isVoted); 
       } else {
         console.log("Failed to check user vote status");
         toast.error("Failed to check your vote status. Please try again later.");
@@ -55,15 +56,29 @@ const VoteForm = ({ handleVote, pollInfo, pollId }: VoteFormProps) => {
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedOption) {
-      // Trigger the handleVote function passed from parent (usually the page component)
-      const formData = new FormData();
-      formData.append('voteOption', selectedOption);
-      handleVote(formData);
-
-      toast.success('Your vote has been successfully submitted!', {
-        duration: 3000,
-      });
-      setVoted(true); // Update the state to show that the user has voted
+      try {
+        const payload = {
+        userId: localStorage.getItem('userId'),
+        pollId,
+        optionId: selectedOption
+        }
+        const response = await fetch('/api/vote', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        })
+        const data = response.json();
+        if (response.ok) {
+          toast.success('Your vote has been successfully submitted!', {
+            duration: 3000,
+          });
+          setVoted(true); 
+        }
+      } catch (error) {
+        console.log("Something wrong happened: ", error)
+      }
     } else {
       toast.error('Please select an option before submitting your vote.', {
         duration: 3000,
@@ -96,30 +111,28 @@ const VoteForm = ({ handleVote, pollInfo, pollId }: VoteFormProps) => {
 
           {/* Options */}
           <div className="space-y-4">
-            {pollInfo.options.map((option: Option, index: number) => (
-              <div key={index} className="flex items-center gap-3">
-                <input
-                  type="radio"
-                  id={`option-${index}`}
-                  name="voteOption"
-                  value={option.text} // You can use the option text or id as the value
-                  checked={selectedOption === option.text} // Check if this option is selected
-                  onChange={handleOptionChange}
-                  className="hidden"
-                />
-                <label
-                  htmlFor={`option-${index}`}
-                  className={`w-full h-14 border border-zinc-300 dark:border-zinc-700 hover:border-violet-500 dark:hover:border-violet-400 text-zinc-700 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400 bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-all duration-200 rounded-xl font-medium flex items-center justify-between p-4 cursor-pointer ${
-                    selectedOption === option.text
-                      ? 'bg-violet-200 dark:bg-violet-600 text-violet-900 dark:text-white border-violet-500'
-                      : ''
-                  }`}
-                >
-                  {option.text}
-                  <span className="text-xs text-zinc-400 dark:text-zinc-500">Select</span>
-                </label>
-              </div>
-            ))}
+          {pollInfo.options.map((option: Option) => (
+            <div key={option.id} className="flex items-center gap-3">
+              <input
+                type="radio"
+                id={option.id} // Set the id as the option's unique id
+                name="voteOption"
+                value={option.id} 
+                checked={selectedOption === option.id}
+                className="hidden"
+              />
+              <label
+                htmlFor={option.id} 
+                className={`w-full ${selectedOption === option.id ? 'bg-violet-600 text-white border-violet-600' : 'bg-zinc-50 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300'} 
+                h-14 border border-zinc-300 dark:border-zinc-700 hover:bg-violet-500 dark:hover:bg-violet-400 
+                font-medium rounded-xl flex items-center justify-between p-4 cursor-pointer transition-colors duration-200`}
+                              onClick={() => handleOptionChange(option.id)} 
+              >
+                {option.text}
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">{selectedOption === option.id ? 'selected' : 'select'}</span>
+              </label>
+            </div>
+          ))}
           </div>
 
           {/* Submit Vote Button */}
@@ -133,18 +146,18 @@ const VoteForm = ({ handleVote, pollInfo, pollId }: VoteFormProps) => {
         </form>
       )}
 
-{voted && (
-  <div className="text-center text-zinc-600 dark:text-zinc-400">
-    <h2 className="text-xl font-semibold text-violet-700 dark:text-violet-500 mb-4">
-      Thank you for your participation!
-    </h2>
-    <p className="text-lg">
-      We appreciate your vote. You've already cast your vote for this poll. 
-      <span className="font-medium"> Your opinion has been counted. </span> 
-       Stay tuned for the final results once voting ends!
-    </p>
-  </div>
-)}
+      {voted && (
+        <div className="text-center text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-xl font-semibold text-violet-700 dark:text-violet-500 mb-4">
+            Thank you for your participation!
+          </h2>
+          <p className="text-lg">
+            We appreciate your vote. You've already cast your vote for this poll. 
+            <span className="font-medium"> Your opinion has been counted. </span> 
+            Stay tuned for the final results once voting ends!
+          </p>
+        </div>
+      )}
 
     </div>
   );

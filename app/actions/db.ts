@@ -7,9 +7,10 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
     try {
       const pollRef = await adminDb.collection('polls').add({
         question,
-        options: options.map(option => ({
+        options: options.map((option, index) => ({
           text: option, 
-          votes: 0       
+          votes: 0,
+          id: `option${index}`       
         })),
         userId,
         activePoll: true,
@@ -41,14 +42,26 @@ export const removePoll = async( pollId:string) => {
 }
 
 export const votePoll = async(userId:string, pollId:string, optionId:string) => {
-  const voteRef = await adminDb.collection('polls').doc(pollId).update({
+  const pollRef = adminDb.collection('polls').doc(pollId);
+
+  const pollDoc = await pollRef.get();
+  if (!pollDoc.exists) throw new Error("Poll does not exist");
+
+  const pollData = pollDoc.data();
+  const updatedOptions = pollData?.options.map((option: any) =>
+    option.id === optionId
+      ? { ...option, votes: (option.votes || 0) + 1 }
+      : option
+  );
+  await pollRef.update({
     totalVotes: FieldValue.increment(1),
+    options: updatedOptions,
     votes: FieldValue.arrayUnion({
       voterId: userId,
       votedTo: optionId,
     }),
   });
-  return voteRef;
+  return;
 }
 
 export const checkUser = async (userId: string, pollId: string) => {

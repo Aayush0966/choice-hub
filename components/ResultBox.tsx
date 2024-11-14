@@ -9,7 +9,8 @@ import React, { useEffect, useState } from 'react'
 import { usePollContext } from '@/context/pollContext';
 
 export interface Option  {
-    text: string;         // The text of the option (e.g., "Brazil")
+    text: string;    
+    id: string;     // The text of the option (e.g., "Brazil")
     votes: number;        // The number of votes for this option
     percentage: number;   // The calculated percentage of total votes
     color: string;        // The color associated with this option (as a string representing a gradient)
