@@ -12,14 +12,17 @@ import {
 } from "@/components/ui/select";
 
 interface PollFormProps {
-  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date | null) => void;
+  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date) => void;
   error: string;
   loading: boolean;
 }
 
 const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {  
   const [options, setOptions] = useState<string[]>(['', '']); 
-  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [endTime, setEndTime] = useState<Date>(() => {
+    const now = new Date();
+    return new Date(now.getTime() + 60 * 60 * 1000);
+  });
   const [duration, setDuration] = useState<string>('1h');
 
   const addOption = () => {
@@ -84,7 +87,6 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
         
         <form onSubmit={handleFormSubmit} className="max-w-2xl mx-auto">
           <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-8 shadow-xl ring-1 ring-zinc-200/50 dark:ring-zinc-800/50 space-y-8">
-            {/* Form Header */}
             <div>
               <h1 className="text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
                 Create Your

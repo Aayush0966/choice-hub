@@ -16,16 +16,14 @@ function PollSection() {
     const userId = pollState?.user?.userId;
     const pollId = pollState?.activePollId;
 
-    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date | null) => {
+    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date) => {
         event.preventDefault();
         setLoading(true);
         setError('');
-        console.log("got here")
     
         const formData = new FormData(event.currentTarget);
         const userId = localStorage.getItem('userId');
         const question = formData.get("question") as string | null;
-        console.log(endTime)
     
         try {
           const payload = { userId, question, options, endTime };

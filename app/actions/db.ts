@@ -17,7 +17,6 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
         createdAt: new Date(),
         endTime,
       });
-      console.log("Poll created with Poll Id", pollRef.id);
       return pollRef.id;
     } catch (error) {
       console.error("Something went wrong while creating the poll:", error);
