@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 import PollForm from './PollForm';
 import PollResult from './PollResult';
 import { usePollContext } from '@/context/pollContext';
+import { BackgroundLines } from './ui/background-lines';
+import Header from './ui/Header';
 
 function PollSection() {
     const [error, setError] = useState<string>('');
@@ -54,8 +56,15 @@ function PollSection() {
 
 
   return (
-    <div className="min-h-screen relative bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-transparent to-fuchsia-100/20 dark:from-violet-900/10 dark:to-fuchsia-900/10"></div>
+<BackgroundLines className="relative  h-full min-h-screen bg-zinc-50 dark:bg-black">
+      {/* Subtle Background Gradient */}
+      <div className="absolute inset-0">
+        <div className="absolute w-full h-full">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-transparent to-fuchsia-100/20 dark:from-violet-900/10 dark:to-fuchsia-900/10"></div>
+        </div>
+      </div>
+
+      <Header />      
       {error && <div className="error-message">{error}</div>}
       {
         
@@ -66,7 +75,7 @@ function PollSection() {
         userId && pollId &&
         <PollResult userId={userId} pollId={pollId} />
       }
-      </div>
+    </BackgroundLines>
   )
 }
 

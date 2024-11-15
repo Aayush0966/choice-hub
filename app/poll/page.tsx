@@ -3,7 +3,7 @@ import React from 'react'
 
 function PollPage() {
   return (
-    <div className="relative min-h-screen bg-zinc-50 dark:bg-black">
+    <div className="relative min-h-screen h-full bg-zinc-50 dark:bg-black">
       <PollSection />
     </div>
   )

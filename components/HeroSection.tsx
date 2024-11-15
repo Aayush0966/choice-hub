@@ -46,13 +46,8 @@ const HeroSection = () => {
         {/* Navigation */}
         <nav className="pt-8 flex items-center justify-between">
           <Link href='/' className="flex items-center">
-            <Image
-              src={logo}
-              width={48}
-              height={48}
-              className="dark:filter dark:invert"
-              alt="Pollify"
-            />
+          <Vote className="w-32 h-20 text-black dark:text-white" />
+
             <h2 className="uppercase text-3xl p-6 font-semibold text-zinc-900 dark:text-white tracking-tight">
               Pollify
             </h2>

@@ -2,11 +2,12 @@ import { Vote } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import VoteForm from './VoteForm';
+import Header from './ui/Header';
 
 async function VotePage({pollInfo, pollId}: {pollInfo: any, pollId:string}) {
 
   return (
-    <div className="relative w-full min-h-screen bg-zinc-50 dark:bg-black flex flex-col items-center">
+    <div className="relative w-full min-h-screen bg-zinc-50 dark:bg-black  items-center">
     {/* Background Gradient */}
     <div className="absolute inset-0">
       <div className="absolute w-full h-full">
@@ -15,16 +16,7 @@ async function VotePage({pollInfo, pollId}: {pollInfo: any, pollId:string}) {
     </div>
 
     {/* Navigation */}
-    <nav className="relative border-b border-zinc-200/80 dark:border-zinc-800/80 backdrop-blur-xl bg-zinc-50/80 dark:bg-zinc-900/80 w-full">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <Vote className="w-8 h-8 text-zinc-900 dark:text-white" />
-            <span className="text-xl font-semibold text-zinc-900 dark:text-white tracking-tight">Pollify</span>
-          </Link>
-        </div>
-      </div>
-    </nav>
+    <Header />
 
     <VoteForm pollId={pollId} pollInfo={pollInfo} />
     </div>
