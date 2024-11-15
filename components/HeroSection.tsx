@@ -33,7 +33,7 @@ const HeroSection = () => {
   ]
 
   return (
-    <BackgroundLines className="relative min-h-screen bg-zinc-50 dark:bg-black">
+    <BackgroundLines className="relative min-h-screen bg-[#D9D9D9] dark:bg-black">
       {/* Subtle Background Gradient */}
       <div className="absolute inset-0">
         <div className="absolute w-full h-full">
@@ -49,7 +49,7 @@ const HeroSection = () => {
           <Vote className="w-32 h-20 text-black dark:text-white" />
 
             <h2 className="uppercase text-3xl p-6 font-semibold text-zinc-900 dark:text-white tracking-tight">
-              Pollify
+              Choice Hub
             </h2>
           </Link>
           

@@ -28,7 +28,7 @@ function ShareCard({pollId} : {pollId:string}) {
               <RWebShare
                 data={{
                 text: "Vote now",
-                title: "Pollify",
+                title: "Choice Hub",
                 url: pollUrl,
               }}
                >

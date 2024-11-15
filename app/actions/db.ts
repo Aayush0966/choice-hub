@@ -3,7 +3,7 @@ import { adminDb } from "@/lib/FirebaseAdmin";
 import { FieldValue } from 'firebase-admin/firestore'
 
 
-export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string) => {
+export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string, endTime: Date | null) => {
     try {
       const pollRef = await adminDb.collection('polls').add({
         question,
@@ -15,6 +15,7 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
         userId,
         activePoll: true,
         createdAt: new Date(),
+        endTime,
       });
       console.log("Poll created with Poll Id", pollRef.id);
       return pollRef.id;
@@ -28,6 +29,10 @@ export const getPollDetails = async(pollId: string) => {
   const pollDoc = await adminDb.collection('polls').doc(pollId).get();
   if (pollDoc.exists) {
     const pollData = pollDoc.data();
+    const endTime = pollData?.endTime;
+    if (endTime && endTime < new Date()) {
+      await adminDb.collection('polls').doc(pollId).update({activePoll: false});
+    }
     delete pollData?.userId;
     delete pollData?.createdAt;
     return pollData;
@@ -48,6 +53,11 @@ export const votePoll = async(userId:string, pollId:string, optionId:string) => 
   if (!pollDoc.exists) throw new Error("Poll does not exist");
 
   const pollData = pollDoc.data();
+  const endTime = pollData?.endTime;
+  if (endTime && endTime < new Date()) {
+    await adminDb.collection('polls').doc(pollId).update({activePoll: false});
+    return;
+  }
   const updatedOptions = pollData?.options.map((option: any) =>
     option.id === optionId
       ? { ...option, votes: (option.votes || 0) + 1 }
@@ -69,7 +79,10 @@ export const checkUser = async (userId: string, pollId: string) => {
 
   if (pollDoc.exists) {
     const userData = pollDoc.data();
-
+    const endTime = userData?.endTime;
+    if (endTime && endTime < new Date()) {
+      await adminDb.collection('polls').doc(pollId).update({activePoll: false});
+    }
     const isVoted = userData?.votes?.some((vote: { voterId: string }) => vote?.voterId === userId);
     return isVoted; 
   }

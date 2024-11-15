@@ -7,7 +7,7 @@ import Header from './ui/Header';
 async function VotePage({pollInfo, pollId}: {pollInfo: any, pollId:string}) {
 
   return (
-    <div className="relative w-full min-h-screen bg-zinc-50 dark:bg-black  items-center">
+    <div className="relative w-full min-h-screen bg-[#D9D9D9] dark:bg-black  items-center">
     {/* Background Gradient */}
     <div className="absolute inset-0">
       <div className="absolute w-full h-full">

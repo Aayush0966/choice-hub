@@ -16,7 +16,7 @@ function PollSection() {
     const userId = pollState?.user?.userId;
     const pollId = pollState?.activePollId;
 
-    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[]) => {
+    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date | null) => {
         event.preventDefault();
         setLoading(true);
         setError('');
@@ -25,9 +25,10 @@ function PollSection() {
         const formData = new FormData(event.currentTarget);
         const userId = localStorage.getItem('userId');
         const question = formData.get("question") as string | null;
+        console.log(endTime)
     
         try {
-          const payload = { userId, question, options };
+          const payload = { userId, question, options, endTime };
     
           const response = await fetch('/api/poll', {
             method: 'POST',
@@ -56,7 +57,7 @@ function PollSection() {
 
 
   return (
-<BackgroundLines className="relative  h-full min-h-screen bg-zinc-50 dark:bg-black">
+   <BackgroundLines className="relative w-full h-screen overflow-hidden bg-[#D9D9D9] dark:bg-black">
       {/* Subtle Background Gradient */}
       <div className="absolute inset-0">
         <div className="absolute w-full h-full">
@@ -64,17 +65,18 @@ function PollSection() {
         </div>
       </div>
 
-      <Header />      
-      {error && <div className="error-message">{error}</div>}
-      {
-        
-        pollState.activePollId === null &&
-        <PollForm createPoll={createPoll} error={error} loading={loading} />
-      }
-      {
-        userId && pollId &&
-        <PollResult userId={userId} pollId={pollId} />
-      }
+      <div className="relative h-full overflow-auto">
+        <Header />      
+        {error && <div className="error-message">{error}</div>}
+        {
+          pollState.activePollId === null &&
+          <PollForm createPoll={createPoll} error={error} loading={loading} />
+        }
+        {
+          userId && pollId &&
+          <PollResult userId={userId} pollId={pollId} />
+        }
+      </div>
     </BackgroundLines>
   )
 }

@@ -1,20 +1,26 @@
 'use client'
 import { useState } from 'react';
-import { ArrowRight, PlusCircle, Trash2, Sparkles, Vote } from 'lucide-react';
+import { ArrowRight, PlusCircle, Trash2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
-import Header from './ui/Header';
-import { BackgroundLines } from './ui/background-lines';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PollFormProps {
-  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[]) => void;
+  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date | null) => void;
   error: string;
   loading: boolean;
 }
 
 const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {  
   const [options, setOptions] = useState<string[]>(['', '']); 
+  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [duration, setDuration] = useState<string>('1h');
 
   const addOption = () => {
     setOptions([...options, '']);
@@ -32,13 +38,41 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
     setOptions(updatedOptions);
   };
 
+  const handleDurationChange = (value: string) => {
+    setDuration(value);
+    const now = new Date();
+    
+    switch (value) {
+      case '1h':
+        setEndTime(new Date(now.getTime() + 60 * 60 * 1000));
+        break;
+      case '6h':
+        setEndTime(new Date(now.getTime() + 6 * 60 * 60 * 1000));
+        break;
+      case '12h':
+        setEndTime(new Date(now.getTime() + 12 * 60 * 60 * 1000));
+        break;
+      case '24h':
+        setEndTime(new Date(now.getTime() + 24 * 60 * 60 * 1000));
+        break;
+      case '48h':
+        setEndTime(new Date(now.getTime() + 48 * 60 * 60 * 1000));
+        break;
+      case '1w':
+        setEndTime(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
+        break;
+      default:
+        setEndTime(null);
+    }
+  };
+
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    createPoll(event, options)
+    createPoll(event, options, endTime)
   }
 
   return (
-    <div className="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    <div className="relative w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-y-auto">
         {error && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 animate-shake">
             <div className="flex items-center gap-2">
@@ -48,7 +82,7 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
           </div>
         )}
         
-        <form onSubmit={handleFormSubmit} className="max-w-2xl h-full mx-auto">
+        <form onSubmit={handleFormSubmit} className="max-w-2xl mx-auto">
           <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-8 shadow-xl ring-1 ring-zinc-200/50 dark:ring-zinc-800/50 space-y-8">
             {/* Form Header */}
             <div>
@@ -75,6 +109,33 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
                 placeholder="What would you like to ask?"
                 className="w-full text-lg h-14 bg-white dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:border-violet-500 focus:ring-violet-500/20 rounded-xl transition-all duration-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
               />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-zinc-900 dark:text-white font-medium text-lg">
+                Poll Duration
+              </label>
+              <Select value={duration} onValueChange={handleDurationChange}>
+                <SelectTrigger className="w-full h-14 bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 focus:border-violet-500 focus:ring-violet-500/20 rounded-xl transition-all duration-200">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5 text-violet-500 dark:text-violet-400" />
+                    <SelectValue placeholder="Select duration" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="1h">1 hour</SelectItem>
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="6h">6 hours</SelectItem>
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="12h">12 hours</SelectItem>
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="24h">24 hours</SelectItem>
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="48h">48 hours</SelectItem>
+                  <SelectItem className="hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:bg-zinc-100 dark:focus:bg-zinc-700 cursor-pointer transition-colors duration-200" value="1w">1 week</SelectItem>
+                </SelectContent>
+              </Select>
+              {endTime && (
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Poll will end on: {endTime.toLocaleString()}
+                </p>
+              )}
             </div>
 
             <div className="space-y-4">
