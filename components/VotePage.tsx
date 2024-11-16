@@ -1,5 +1,3 @@
-import { Vote } from 'lucide-react';
-import Link from 'next/link';
 import React from 'react'
 import VoteForm from './VoteForm';
 import Header from './ui/Header';

@@ -17,7 +17,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), system-ui, sans-serif;
 } */
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(-6deg); }
@@ -36,4 +36,14 @@ body {
 .animate-float-delayed {
   animation: float-delayed 4s ease-in-out infinite;
   animation-delay: 2s;
+}
+
+:root {
+  --font-poppins: var(--font-poppins);
+  --font-kurale: var(--font-kurale);
+  --font-roboto: var(--font-roboto);
+}
+
+body {
+  font-family: var(--font-roboto), system-ui, sans-serif;
 }

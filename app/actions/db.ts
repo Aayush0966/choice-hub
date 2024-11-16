@@ -2,8 +2,39 @@
 import { adminDb } from "@/lib/FirebaseAdmin";
 import { FieldValue } from 'firebase-admin/firestore'
 
+type PollOption = {
+  text: string;
+  votes: number;
+  id: string;
+}
 
-export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string, endTime: Date | null) => {
+type PollData = {
+  question: string;
+  options: PollOption[];
+  userId?: string;
+  activePoll: boolean;
+  createdAt?: number;
+  endTime: number;
+  votes?: Array<{ voterId: string; votedTo: string }>;
+  totalVotes?: number;
+}
+
+const validatePollStatus = async (pollDoc: FirebaseFirestore.DocumentSnapshot) => {
+  if (!pollDoc.exists) return null;
+  
+  const pollData = pollDoc.data() as PollData;
+  if (!pollData?.activePoll) return null;
+
+  const currentTime = Math.floor(Date.now() / 1000);
+  if (pollData.endTime < currentTime) {
+    await pollDoc.ref.update({ activePoll: false });
+    return null;
+  }
+
+  return pollData;
+};
+
+export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string, endTime: number) => {
     try {
       const pollRef = await adminDb.collection('polls').add({
         question,
@@ -14,7 +45,7 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
         })),
         userId,
         activePoll: true,
-        createdAt: new Date(),
+        createdAt: Math.floor(Date.now() / 1000),
         endTime,
       });
       return pollRef.id;
@@ -23,45 +54,33 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
     }
   };
 
-export const getPollDetails = async(pollId: string) => {
-
+export const getPollDetails = async (pollId: string) => {
   const pollDoc = await adminDb.collection('polls').doc(pollId).get();
-  if (pollDoc.exists) {
-    const pollData = pollDoc.data();
-    const endTime = pollData?.endTime;
-    if (endTime && endTime < new Date()) {
-      await adminDb.collection('polls').doc(pollId).update({activePoll: false});
-    }
-    delete pollData?.userId;
-    delete pollData?.createdAt;
-    return pollData;
-  } else {
-    console.log("No poll found with the specified ID.");
-    return null;
-  }}
+  const pollData = await validatePollStatus(pollDoc);
+  
+  if (!pollData) return null;
+  
+  const { userId, createdAt, ...publicPollData } = pollData;
+  return publicPollData;
+};
 
-export const removePoll = async( pollId:string) => {
-  await adminDb.collection('polls').doc(pollId).update({activePoll: false});
-  return ;
-}
+export const removePoll = async (pollId: string) => {
+  await adminDb.collection('polls').doc(pollId).update({ activePoll: false });
+};
 
-export const votePoll = async(userId:string, pollId:string, optionId:string) => {
+export const votePoll = async (userId: string, pollId: string, optionId: string) => {
   const pollRef = adminDb.collection('polls').doc(pollId);
-
   const pollDoc = await pollRef.get();
-  if (!pollDoc.exists) throw new Error("Poll does not exist");
+  
+  const pollData = await validatePollStatus(pollDoc);
+  if (!pollData) return null;
 
-  const pollData = pollDoc.data();
-  const endTime = pollData?.endTime;
-  if (endTime && endTime < new Date()) {
-    await adminDb.collection('polls').doc(pollId).update({activePoll: false});
-    return;
-  }
-  const updatedOptions = pollData?.options.map((option: any) =>
+  const updatedOptions = pollData.options.map((option) =>
     option.id === optionId
       ? { ...option, votes: (option.votes || 0) + 1 }
       : option
   );
+
   await pollRef.update({
     totalVotes: FieldValue.increment(1),
     options: updatedOptions,
@@ -70,21 +89,13 @@ export const votePoll = async(userId:string, pollId:string, optionId:string) => 
       votedTo: optionId,
     }),
   });
-  return;
-}
+};
 
 export const checkUser = async (userId: string, pollId: string) => {
   const pollDoc = await adminDb.collection('polls').doc(pollId).get();
-
-  if (pollDoc.exists) {
-    const userData = pollDoc.data();
-    const endTime = userData?.endTime;
-    if (endTime && endTime < new Date()) {
-      await adminDb.collection('polls').doc(pollId).update({activePoll: false});
-    }
-    const isVoted = userData?.votes?.some((vote: { voterId: string }) => vote?.voterId === userId);
-    return isVoted; 
-  }
-
-  return false;
-}
+  const pollData = await validatePollStatus(pollDoc);
+  
+  if (!pollData) return null;
+  
+  return pollData.votes?.some((vote) => vote.voterId === userId) ?? false;
+};

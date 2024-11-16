@@ -32,7 +32,7 @@ interface PollProviderProps {
 export const PollProvider: React.FC<PollProviderProps> = ({ children }) => {
   const [pollState, setPollState] = useState<PollState>({
     activePollId: null,
-    user: { userId: null }, // Initial state for userId is null
+    user: { userId: null }, 
   });
   
   const [isClient, setIsClient] = useState(false); // Flag to track if client-side

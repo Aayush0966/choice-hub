@@ -12,16 +12,15 @@ import {
 } from "@/components/ui/select";
 
 interface PollFormProps {
-  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date) => void;
+  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: number) => void;
   error: string;
   loading: boolean;
 }
 
 const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {  
   const [options, setOptions] = useState<string[]>(['', '']); 
-  const [endTime, setEndTime] = useState<Date>(() => {
-    const now = new Date();
-    return new Date(now.getTime() + 60 * 60 * 1000);
+  const [endTime, setEndTime] = useState<number>(() => {
+    return Math.floor(Date.now() / 1000) + 2 * 60;
   });
   const [duration, setDuration] = useState<string>('1h');
 
@@ -43,29 +42,29 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
 
   const handleDurationChange = (value: string) => {
     setDuration(value);
-    const now = new Date();
+    const now = Math.floor(Date.now() / 1000);
     
     switch (value) {
       case '1h':
-        setEndTime(new Date(now.getTime() + 60 * 60 * 1000));
+        setEndTime(now + 60 * 60);
         break;
       case '6h':
-        setEndTime(new Date(now.getTime() + 6 * 60 * 60 * 1000));
+        setEndTime(now + 6 * 60 * 60);
         break;
       case '12h':
-        setEndTime(new Date(now.getTime() + 12 * 60 * 60 * 1000));
+        setEndTime(now + 12 * 60 * 60);
         break;
       case '24h':
-        setEndTime(new Date(now.getTime() + 24 * 60 * 60 * 1000));
+        setEndTime(now + 24 * 60 * 60);
         break;
       case '48h':
-        setEndTime(new Date(now.getTime() + 48 * 60 * 60 * 1000));
+        setEndTime(now + 48 * 60 * 60);
         break;
       case '1w':
-        setEndTime(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
+        setEndTime(now + 7 * 24 * 60 * 60);
         break;
       default:
-        setEndTime(null);
+        setEndTime(now);
     }
   };
 
@@ -135,7 +134,7 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
               </Select>
               {endTime && (
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Poll will end on: {endTime.toLocaleString()}
+                  Poll will end on: {new Date(endTime * 1000).toLocaleString()}
                 </p>
               )}
             </div>

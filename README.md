@@ -1,36 +1,165 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Choice Hub 🎯
+[![Next.js](https://img.shields.io/badge/Next.js-15.0.3-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.0.0--rc-blue?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-Latest-orange?style=flat-square&logo=firebase)](https://firebase.google.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-## Getting Started
+Real-time polling made simple. Choice Hub is a modern, lightning-fast polling application that lets you create, share, and participate in polls instantly - no sign-up required. Built with Next.js 15 and Firebase, it delivers real-time results with a sleek, responsive interface.
 
-First, run the development server:
+![Choice Hub Demo](demo-placeholder.gif)
 
+## ⚡️ Live Demo
+Experience it live: [Choice Hub Demo](https://choice-hub.vercel.app)
+
+## 🎯 Key Features
+
+### Instant Polling 📊
+- Create custom polls in seconds
+- Add unlimited options
+- Set flexible durations (1 hour to 1 week)
+- Real-time vote updates
+
+### Seamless Sharing 🔗
+- One-click URL copying
+- Native web share integration
+- Instant access for participants
+
+### Live Analytics 📈
+- Real-time vote counting
+- Dynamic progress visualization
+- Leading option highlights
+- Total participation tracking
+
+### Privacy First 🛡️
+- No account required
+- Anonymous voting
+- Local storage and firebase tracking
+- Duplicate vote prevention
+
+## 🛠️ Tech Stack
+
+### Frontend Powerhouse
+- **[Next.js 15.0.3](https://nextjs.org/)** - React framework with App Router
+- **[React 19.0.0-rc](https://reactjs.org/)** - UI library
+- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **[Tailwind CSS](https://tailwindcss.com/)** - Styling
+- **[shadcn/ui](https://ui.shadcn.com/)** - UI components
+- **[Lucide React](https://lucide.dev/)** - Icons
+
+### Backend & Database
+- **[Firebase](https://firebase.google.com/)**
+  - Firestore for real-time data
+  - Admin SDK for server operations
+- **Next.js API Routes** - Server endpoints
+
+### State & Performance
+- React Context
+- Local Storage
+- Real-time Firestore listeners
+
+## 🚀 Quick Start
+
+### Prerequisites
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+node >= 18.0.0
+npm >= 8.0.0
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository
+```bash
+git clone https://github.com/Aayush0966/choice-hub.git
+cd choice-hub
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Install dependencies
+```bash
+npm install
+```
 
-## Learn More
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+# Add your Firebase configuration
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Start development server
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Open [http://localhost:3000](http://localhost:3000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📁 Project Structure
 
-## Deploy on Vercel
+```
+choice-hub/
+├── app/                   # Next.js app directory
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Home page
+│   └── [...routes]/      # Dynamic routes
+├── components/           # React components
+│   ├── ui/              # Reusable UI components
+│   └── features/        # Feature-specific components
+├── lib/                 # Utilities and helpers
+├── styles/              # Global styles
+└── types/               # TypeScript definitions
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔧 Configuration
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Key configuration files:
+- `.env.local` - Environment variables
+- `tailwind.config.js` - Tailwind CSS configuration
+- `firebase.config.ts` - Firebase setup
+- `tsconfig.json` - TypeScript configuration
+
+## 🤝 Contributing
+
+We love contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch:
+```bash
+git checkout -b feature/AmazingFeature
+```
+3. Commit your changes:
+```bash
+git commit -m 'Add some AmazingFeature'
+```
+4. Push to the branch:
+```bash
+git push origin feature/AmazingFeature
+```
+5. Open a Pull Request
+
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙌 Acknowledgements
+
+- [Next.js](https://nextjs.org/) for the amazing framework
+- [Firebase](https://firebase.google.com/) for real-time capabilities
+- [shadcn/ui](https://ui.shadcn.com/) for beautiful components
+- [Vercel](https://vercel.com/) for hosting
+
+## 🔗 Connect With Me
+
+<div align="center">
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-255E63?style=for-the-badge&logo=About.me&logoColor=white)](https://aayushbudhathoki.com.np)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Aayush0966)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aayush-budhathoki-102954332/)
+
+</div>
+
+---
+
+<div align="center">
+  <p>If you find Choice Hub helpful, please consider giving it a star! ⭐️</p>
+ 
+</div>

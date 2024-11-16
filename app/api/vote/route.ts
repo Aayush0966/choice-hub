@@ -10,7 +10,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 400 });
         }
 
-        await votePoll(userId, pollId, optionId);
+        const result = await votePoll(userId, pollId, optionId);
+        if (!result) {
+            return NextResponse.json({ error: 'Poll has ended' }, { status: 403 });
+        }
         return NextResponse.json({ message: 'Success' }, { status: 200 });
 
     } catch (error) {

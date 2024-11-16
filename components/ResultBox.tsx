@@ -6,19 +6,15 @@ import { ArrowRight, Users, Trophy, Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { usePollContext } from '@/context/pollContext';
 import { toast } from 'react-hot-toast';
+import { Option } from '@/types/option';
 
-export interface Option {
-  text: string;
-  id: string;
-  votes: number;
-  percentage: number;
-  color: string;
-}
+
 
 function ResultBox({ pollId, userId }: { pollId: string; userId: string }) {
   const [pollData, setPollData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { setActivePoll } = usePollContext();
+  const [timeLeft, setTimeLeft] = useState<string>('');
 
   const colors: { [key: number]: string } = {
     0: "from-violet-500 via-violet-600 to-violet-700",
@@ -73,6 +69,23 @@ function ResultBox({ pollId, userId }: { pollId: string; userId: string }) {
     }
   };
 
+  const calculateTimeLeft = (endTime: number) => {
+    const endTimeInMs = endTime * 1000;
+    const now = Date.now();
+    const diff = endTimeInMs - now;
+
+    if (diff <= 0) {
+      return 'Poll ended';
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    return `${days > 0 ? `${days}d ` : ''}${hours}h ${minutes}m ${seconds}s`;
+  };
+
   useEffect(() => {
     const pollRef = doc(db, 'polls', pollId);
     const unsubscribe = onSnapshot(pollRef, (snapshot: any) => {
@@ -91,6 +104,16 @@ function ResultBox({ pollId, userId }: { pollId: string; userId: string }) {
 
     return () => unsubscribe();
   }, [pollId, userId]);
+
+  useEffect(() => {
+    if (!pollData?.endTime) return;
+     
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(pollData.endTime));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [pollData?.endTime]);
 
   if (loading) {
     return (
@@ -113,6 +136,13 @@ function ResultBox({ pollId, userId }: { pollId: string; userId: string }) {
               {pollData?.totalVotes} {pollData?.totalVotes === 1 ? 'response' : 'responses'}
             </span>
           </div>
+          {timeLeft && (
+            <div className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full">
+              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                Time remaining: {timeLeft}
+              </span>
+            </div>
+          )}
           <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400 animate-pulse">
             Live Results
           </span>

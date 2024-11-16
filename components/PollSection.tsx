@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import PollForm from './PollForm';
@@ -16,7 +15,7 @@ function PollSection() {
     const userId = pollState?.user?.userId;
     const pollId = pollState?.activePollId;
 
-    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: Date) => {
+    const createPoll = async (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: number) => {
         event.preventDefault();
         setLoading(true);
         setError('');

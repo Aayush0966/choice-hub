@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Vote, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Option } from './ResultBox';
+import { Option } from '@/types/option';
 import { toast } from 'react-hot-toast';
 import { usePollContext } from '@/context/pollContext';
 import { motion } from 'framer-motion';
@@ -104,8 +104,20 @@ const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
         });
         setVoted(true);
       }
+      else {
+        if (response.statusText === 'Forbidden') {
+          toast.error('Poll has ended', {
+            icon: '❌',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+            },
+          });
+        }
+      }
     } catch (error) {
-      toast.error('Failed to submit vote', {
+      toast.error('Failed to submit vote: ' + error, {
         icon: '❌',
         style: {
           borderRadius: '10px',
@@ -134,7 +146,7 @@ const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
           </div>
         )}
 
-        {!voted && !loading && (
+      {  !voted && !loading && pollInfo !== null && (
           <form
             onSubmit={handleFormSubmit}
             className="max-w-2xl w-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl p-8 shadow-lg ring-1 ring-zinc-200 dark:ring-zinc-800 space-y-8"
@@ -197,7 +209,7 @@ const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
           </form>
         )}
 
-        {voted && (
+        {voted && pollInfo !== null && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -223,6 +235,19 @@ const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
             </p>
           </motion.div>
         )}
+
+        {
+          !loading && pollInfo === null && (
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <h2 className="text-3xl font-semibold text-violet-700 dark:text-violet-500">
+                Poll has ended
+              </h2>
+              <p className="text-2xl text-zinc-600 dark:text-zinc-400">
+                Thank you for your participation!
+              </p>
+            </div>
+          )
+        }
       </div>
   );
 };
