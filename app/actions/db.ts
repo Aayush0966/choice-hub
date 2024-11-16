@@ -34,7 +34,7 @@ const validatePollStatus = async (pollDoc: FirebaseFirestore.DocumentSnapshot) =
   return pollData;
 };
 
-export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string, endTime: number) => {
+export const createPoll = async (question: FormDataEntryValue, options: string[], userId: string, endTime: number, description?: string) => {
     try {
       const pollRef = await adminDb.collection('polls').add({
         question,
@@ -44,6 +44,7 @@ export const createPoll = async (question: FormDataEntryValue, options: string[]
           id: `option${index}`       
         })),
         userId,
+        description,
         activePoll: true,
         createdAt: Math.floor(Date.now() / 1000),
         endTime,

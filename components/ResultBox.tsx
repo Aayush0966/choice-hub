@@ -129,6 +129,9 @@ function ResultBox({ pollId, userId }: { pollId: string; userId: string }) {
         <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400">
           {pollData?.question}
         </h1>
+        {pollData?.description && (
+          <p className="text-zinc-600 dark:text-zinc-400 mb-4">{pollData?.description}</p>
+        )}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800/50 px-3 py-1.5 rounded-full">
             <Users className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />

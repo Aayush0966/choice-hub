@@ -3,7 +3,7 @@ import React from 'react';
 
 const GithubButton = () => {
   return (
-    <Link href="#" className="flex overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black dark:bg-white text-white dark:text-black shadow hover:bg-black/90 dark:hover:bg-white/90 h-12 px-4 py-3 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-black hover:ring-offset-2 dark:hover:ring-white hover:ring-offset-white">
+    <Link href="https://github.com/Aayush0966/choice-hub" className="flex overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black dark:bg-white text-white dark:text-black shadow hover:bg-black/90 dark:hover:bg-white/90 h-12 px-4 py-3 max-w-52 whitespace-pre md:flex group relative w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-black hover:ring-offset-2 dark:hover:ring-white hover:ring-offset-white">
       <span className="absolute right-0 -mt-12 h-36 w-8 translate-x-12 rotate-12 bg-white dark:bg-black opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40" />
       <div className="flex items-center">
         <svg className="w-4 h-4 fill-current" viewBox="0 0 438.549 438.549">

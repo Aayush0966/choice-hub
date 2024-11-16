@@ -158,14 +158,13 @@ const VoteForm = ({ pollInfo, pollId }: VoteFormProps) => {
               <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400">
                 {pollInfo.question}
               </h1>
-              <p className="text-zinc-600 dark:text-zinc-400">Cast your vote and see the results!</p>
+              <p className="text-zinc-600 dark:text-zinc-400">{pollInfo.description}</p>
             </div>
 
             <div className="space-y-4">
               {pollInfo.options.map((option: Option, index: number) => (
                 <div
                   key={option.id}
-                 
                 >
                   <label
                     htmlFor={option.id}

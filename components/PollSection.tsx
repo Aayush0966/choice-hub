@@ -23,9 +23,10 @@ function PollSection() {
         const formData = new FormData(event.currentTarget);
         const userId = localStorage.getItem('userId');
         const question = formData.get("question") as string | null;
+        const description = formData.get("description") as string | null;
     
         try {
-          const payload = { userId, question, options, endTime };
+          const payload = { userId, question, options, endTime, description };
     
           const response = await fetch('/api/poll', {
             method: 'POST',

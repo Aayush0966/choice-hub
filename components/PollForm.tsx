@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 
 interface PollFormProps {
-  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: number) => void;
+  createPoll: (event: React.FormEvent<HTMLFormElement>, options: string[], endTime: number, description?: string) => void;
   error: string;
   loading: boolean;
 }
@@ -20,9 +20,10 @@ interface PollFormProps {
 const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {  
   const [options, setOptions] = useState<string[]>(['', '']); 
   const [endTime, setEndTime] = useState<number>(() => {
-    return Math.floor(Date.now() / 1000) + 2 * 60;
+    return Math.floor(Date.now() / 1000) + 60 * 60;
   });
   const [duration, setDuration] = useState<string>('1h');
+  const [description, setDescription] = useState<string>('');
 
   const addOption = () => {
     setOptions([...options, '']);
@@ -109,6 +110,19 @@ const PollForm: React.FC<PollFormProps> = ({ createPoll, error, loading }) => {
                 type="text"
                 placeholder="What would you like to ask?"
                 className="w-full text-lg h-14 bg-white dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:border-violet-500 focus:ring-violet-500/20 rounded-xl transition-all duration-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label htmlFor="description" className="block text-zinc-900 dark:text-white font-medium text-lg">
+                Description <span className="text-sm text-zinc-500">(optional)</span>
+              </label>
+              <input 
+                type='textarea'
+                id="description"
+                name="description"
+                placeholder="Add context or additional information about your poll..."
+                className="w-full min-h-[100px] text-base p-4 bg-white dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-700 focus:border-violet-500 focus:ring-violet-500/20 rounded-xl transition-all duration-200 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
               />
             </div>
 
