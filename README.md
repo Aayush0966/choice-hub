@@ -7,10 +7,10 @@
 
 Real-time polling made simple. Choice Hub is a modern, lightning-fast polling application that lets you create, share, and participate in polls instantly - no sign-up required. Built with Next.js 15 and Firebase, it delivers real-time results with a sleek, responsive interface.
 
-![Choice Hub Demo](demo-placeholder.gif)
+![Choice Hub Demo]([demo-placeholder.gif](https://s11.gifyu.com/images/SyOl7.gif))
 
 ## ⚡️ Live Demo
-Experience it live: [Choice Hub Demo](https://choice-hub.vercel.app)
+Experience it live: [Choice Hub Demo](https://choicehub.vercel.app)
 
 ## 🎯 Key Features
 
