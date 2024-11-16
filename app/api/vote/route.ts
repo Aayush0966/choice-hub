@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         }
 
         const result = await votePoll(userId, pollId, optionId);
-        if (!result) {
+        if (result === null) {
             return NextResponse.json({ error: 'Poll has ended' }, { status: 403 });
         }
         return NextResponse.json({ message: 'Success' }, { status: 200 });
